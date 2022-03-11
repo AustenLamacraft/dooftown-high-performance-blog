@@ -1,5 +1,5 @@
 const todaysDate = new Date();
-const isDev = require("../_data/isdevelopment")();
+const isDev = require("../../_data/isdevelopment")();
 
 function showDraft(data) {
   if (isDev) return true;
