@@ -226,12 +226,14 @@ html {
   }
 }
 */
+
+
 @font-face {
-  font-family: "Inter UI";
-  font-weight: 100 900;
-  /* font-style: oblique 0deg 10deg; */
-  src: url("/fonts/Inter-3.19.var.woff2") format("woff2");
+  font-family: "Lato", sans-serif;
+  font-weight: 100 300;
+  src: url('https://fonts.googleapis.com/css2?family=Lato:wght@300&display=swap');
 }
+
 
 /*
 
@@ -685,8 +687,8 @@ dt {
   }
 }
 html {
-  font-family: Inter UI, sans-serif;
-  --font-family: Inter UI, sans-serif;
+  font-family: Lato, sans-serif;
+  --font-family: Lato, sans-serif;
 }
 form {
   padding: 1.5em 1.5em 0;

@@ -1,8 +1,15 @@
-<ul>
+<dl>
 {% for post in postslist | reverse %}
-  <li>
+  <dt>
     <a href="{{ post.url | url }}">{% if post.data.title %}{{ post.data.title }}{% else %}<code>{{ post.url }}</code>{% endif %}</a>
     <time  datetime="{{ post.date | htmlDateString }}">{{ post.date | readableDate }}</time>
-  </li>
+  </dt>
+  <dd>
+    {{ post.data.summary }}
+    {% for tag in post.data.tags %}
+      {% set tagUrl %}/tags/{{ tag | slugify }}/{% endset %}
+      <a href="{{ tagUrl | url }}" class="post-tag"><mark>{{ tag }}</mark></a>
+    {% endfor %}
+  </dd>
 {% endfor %}
-</ul>
+</dl>

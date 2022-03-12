@@ -1,6 +1,11 @@
 
+- [ ] Open talks in new tab
+- [ ] Filter `collections.all` to just include talk, posts and papers
 - [ ] Add doi / cite at bottom of posts
 - [ ] Add table of contents
+- [ ] HTML (rather than SVG) for MathJax
+- [ ] Publication list
+- [ ] Have massacred the CSP policy in order to get reveal working
 
 # eleventy-high-performance-blog
 

@@ -174,12 +174,31 @@ module.exports = function (eleventyConfig) {
   eleventyConfig.addCollection("posts", function (collectionApi) {
     return collectionApi.getFilteredByTag("posts");
   });
+
+  // Slides need raw markdown to be processed by reveal
+  // https://github.com/11ty/eleventy/issues/1206#issuecomment-718226128
+  eleventyConfig.addCollection('talks', (collection) => {
+    return (
+      collection
+        .getFilteredByTag("talks")
+        // append the raw content
+        .map((item) => {
+          item.data.rawMarkdown = item.template.frontMatter.content || '';
+          return item;
+        })
+    );
+  });
+
   eleventyConfig.addCollection("tagList", require("./_11ty/getTagList"));
   eleventyConfig.addPassthroughCopy("img");
   eleventyConfig.addPassthroughCopy("css");
   // We need to copy cached.js only if GA is used
   eleventyConfig.addPassthroughCopy(GA_ID ? "js" : "js/*[!cached].*");
   eleventyConfig.addPassthroughCopy("fonts");
+
+  // Pass through revealjs
+  // See https://github.com/11ty/eleventy/issues/768#issue-522432961
+  eleventyConfig.addPassthroughCopy({ 'node_modules/reveal.js': 'js/reveal.js' });
 
   // We need to rebuild upon JS change to update the CSP.
   eleventyConfig.addWatchTarget("./js/");
@@ -199,7 +218,7 @@ module.exports = function (eleventyConfig) {
     permalinkClass: "direct-link",
     permalinkSymbol: "#",
   });
-  // markdownLibrary.use(require('@iktakahiro/markdown-it-katex'));
+  
   markdownLibrary.use(require('markdown-it-mathjax3', {
     loader: {load: ['[tex]/physics', '[tex]/ams']},
     tex: {

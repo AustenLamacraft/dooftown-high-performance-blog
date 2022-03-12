@@ -1,0 +1,15 @@
+---
+layout: layouts/base.njk
+title: Talks
+templateClass: tmpl-post
+eleventyNavigation:
+  key: Talks
+  order: 2
+---
+
+Here are the talks
+
+<div id="talks">
+  {% set postslist = collections.talks %}
+  {% include "postslist.njk" %}
+</div>

@@ -1,7 +1,7 @@
 ---
 title: "Machine Learning and Statistical Mechanics II"
 subtitle: ""
-summary: ""
+summary: "TCM graduate lectures on ML"
 authors: []
 tags: []
 categories: []
