@@ -1,3 +1,7 @@
+
+- [ ] Add doi / cite at bottom of posts
+- [ ] Add table of contents
+
 # eleventy-high-performance-blog
 
 A starter repository for building a blog with the [Eleventy static site generator](https://www.11ty.dev/) implementing a wide range of performance best practices.

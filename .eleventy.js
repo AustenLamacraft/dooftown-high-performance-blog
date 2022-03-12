@@ -199,6 +199,14 @@ module.exports = function (eleventyConfig) {
     permalinkClass: "direct-link",
     permalinkSymbol: "#",
   });
+  // markdownLibrary.use(require('@iktakahiro/markdown-it-katex'));
+  markdownLibrary.use(require('markdown-it-mathjax3', {
+    loader: {load: ['[tex]/physics', '[tex]/ams']},
+    tex: {
+      packages: {'[+]': ['physics', 'ams']},
+      tags: 'all'
+    },
+  }));
   eleventyConfig.setLibrary("md", markdownLibrary);
 
   // Browsersync Overrides

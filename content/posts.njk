@@ -1,0 +1,15 @@
+---
+layout: layouts/base.njk
+title: Posts
+templateClass: tmpl-post
+eleventyNavigation:
+  key: Posts
+  order: 7
+---
+
+Here are the posts
+
+<div id="posts">
+  {% set postslist = collections.posts %}
+  {% include "postslist.njk" %}
+</div>

@@ -43,7 +43,6 @@ const jsonLd = (rawContent, outputPath) => {
     ];
     try {
       const obj = JSON.parse(jsonLd.textContent);
-
       if (images.length) {
         obj.image = images.map((img) => BASE_URL + img.src);
         jsonLd.textContent = JSON.stringify(obj);
