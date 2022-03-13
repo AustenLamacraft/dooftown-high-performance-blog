@@ -43,6 +43,7 @@
 const { DateTime } = require("luxon");
 const { promisify } = require("util");
 const fs = require("fs");
+const glob = require("glob");
 const path = require("path");
 const hasha = require("hasha");
 const touch = require("touch");
@@ -56,22 +57,26 @@ const pluginNavigation = require("@11ty/eleventy-navigation");
 const markdownIt = require("markdown-it");
 const markdownItAnchor = require("markdown-it-anchor");
 const localImages = require("./third_party/eleventy-plugin-local-images/.eleventy.js");
+
+
 const CleanCSS = require("clean-css");
 const GA_ID = require("./_data/metadata.json").googleAnalyticsId;
 const { cspDevMiddleware } = require("./_11ty/apply-csp.js");
+
+const templateFormats = ["md", "njk", "html", "liquid"]
 
 module.exports = function (eleventyConfig) {
   eleventyConfig.addPlugin(pluginRss);
   eleventyConfig.addPlugin(pluginSyntaxHighlight);
   eleventyConfig.addPlugin(pluginNavigation);
 
-  eleventyConfig.addPlugin(localImages, {
-    distPath: "_site",
-    assetPath: "/img/remote",
-    selector:
-      "img,amp-img,amp-video,meta[property='og:image'],meta[name='twitter:image'],amp-story",
-    verbose: false,
-  });
+  // eleventyConfig.addPlugin(localImages, {
+  //   distPath: "_site",
+  //   assetPath: "/img/remote",
+  //   selector:
+  //     "img,amp-img,amp-video,meta[property='og:image'],meta[name='twitter:image'],amp-story",
+  //   verbose: false,
+  // });
 
   eleventyConfig.addPlugin(require("./_11ty/img-dim.js"));
   eleventyConfig.addPlugin(require("./_11ty/json-ld.js"));
@@ -219,6 +224,7 @@ module.exports = function (eleventyConfig) {
     permalinkSymbol: "#",
   });
   
+  // Add MathJax
   markdownLibrary.use(require('markdown-it-mathjax3', {
     loader: {load: ['[tex]/physics', '[tex]/ams']},
     tex: {
@@ -227,6 +233,66 @@ module.exports = function (eleventyConfig) {
     },
   }));
   eleventyConfig.setLibrary("md", markdownLibrary);
+
+  // Copy assets to stay with 
+  // See https://github.com/11ty/eleventy/issues/379#issuecomment-779705668
+  eleventyConfig.addTransform("local-images", function(content, outputPath) {
+    // HUGO logic:
+    // - if multiple *.md are in a folder (ignoring _index.html) - then no asset-copy over will occur
+    // - if single index.html (allowing extra _index.html), then no further sub-dirs will be processed, all sub-dirs and files will be copied (except *.md)
+    //
+    // Alg:
+    // - get all md/html/njk in the directory and sub-dirs, ignoring _index.* (_index.* - could be later used to create list-templates)
+    // - if only 1 found = we copy the entire sub-content
+    // - otherwise do no copy-over nothing
+    
+    const template = this;
+
+    if (!template.inputPath.startsWith('./content')) { 
+      return content;
+    }
+    console.warn(`TRANSFORM - input: ${template.inputPath}, output: ${outputPath}`);
+
+
+    const outputDir = path.dirname(outputPath);       
+    const templateDir = path.dirname(template.inputPath).replace(/^\.\//, "");
+    const templateFileName = path.basename(template.inputPath);
+
+    const extensionsRegex = templateFormats.join(",");
+    const mdSearchPattern = path.join(templateDir, `**/*.{${extensionsRegex}}`);
+    const mdIgnorePattern = path.join(templateDir, `**/_index.{${extensionsRegex}}`);
+
+    const entries = glob.sync(mdSearchPattern, { nodir: true, ignore: mdIgnorePattern });
+    
+    // only 1 page template allowed when copying assets
+    if (entries.length > 1) {
+        console.info(`Skipping copying over files from: ${templateDir} as multiple templates found in directory!`);
+        return content;
+    }
+
+    // copy all hierarchically, except templates
+    const fileSearchPattern = path.join(templateDir, `**/*`);
+    const fileIgnorePattern = path.join(templateDir, `**/*.{${extensionsRegex}}`);
+
+    const filesToCopy = glob.sync(fileSearchPattern, { nodir: true, ignore: fileIgnorePattern });
+    console.log(filesToCopy)
+    for (let filePath of filesToCopy) {
+        // strip template dir
+        // prepend output dir
+        const destPath = path.join(
+            outputDir,
+            filePath.substring(templateDir.length)
+        );
+
+        const destDir = path.dirname(destPath);
+        console.log(outputDir, filePath, destDir, templateDir)  
+        fs.mkdirSync(destDir, { recursive: true });
+        fs.copyFileSync(filePath, destPath);
+    }
+
+    // keep original content
+    return content;
+  });
 
   // Browsersync Overrides
   eleventyConfig.setBrowserSyncConfig({
@@ -272,7 +338,7 @@ module.exports = function (eleventyConfig) {
   });
 
   return {
-    templateFormats: ["md", "njk", "html", "liquid"],
+    templateFormats,
 
     // If your site lives in a different subdirectory, change this.
     // Leading or trailing slashes are all normalized away, so don’t worry about those.
