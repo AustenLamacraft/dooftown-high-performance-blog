@@ -18,8 +18,16 @@ Here's some math
 
 $$ J(\theta_0,\theta_1) = \sum_{i=0} \alpha_j$$
 
+---
+
 And now a list 
 - First point
 - Second point
 
-More goes here. How fast is reload? Seems good.
+More goes here. How fast is reload? Not that fast. What about now?
+
+---
+
+## A picture
+
+![](assets/geometry.png)

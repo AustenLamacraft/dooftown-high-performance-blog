@@ -1,11 +1,20 @@
 
 - [ ] Open talks in new tab
-- [ ] Filter `collections.all` to just include talk, posts and papers
+- [X] Filter `collections.all` to just include talk, posts and papers
+- [ ] Tables of contents, figures, links
+- [ ] Pass options from front matter to reveal
 - [ ] Add doi / cite at bottom of posts
 - [ ] Add table of contents
 - [ ] HTML (rather than SVG) for MathJax
 - [ ] Publication list
 - [ ] Have massacred the CSP policy in order to get reveal working
+
+# Features
+
+- Math with MathJax using `markdown-it-mathjax3`
+- Reveal.js slideshow 
+- Assets live locally with each templates (as in Hugo)
+- 
 
 # eleventy-high-performance-blog
 

@@ -25,7 +25,7 @@ image:
 projects: []
 ---
 
-In Lecture 1 we introduced the idea of Variational Inference (VI), which turns the problem of inference in latent variable models into one of optimization. That was a rather high-level view: in this lecture we are going to see in more detail how this works in practice in modern approaches that leverage neural networks and automatic differentiation. Specifically, we going to look at one class of versatile models, with many generalizations, called **Variational Autoencoders**.
+In [Lecture 1](../ml-stat-mech-1) we introduced the idea of Variational Inference (VI), which turns the problem of inference in latent variable models into one of optimization. That was a rather high-level view: in this lecture we are going to see in more detail how this works in practice in modern approaches that leverage neural networks and automatic differentiation. Specifically, we going to look at one class of versatile models, with many generalizations, called **Variational Autoencoders**.
 
 $$
 \newcommand{\E}{\operatorname{\mathbb{E}}}
@@ -86,7 +86,12 @@ There is considerable freedom in this formulation. Given a data distribution, we
 
 [Kingma and Welling](https://arxiv.org/abs/1312.6114) noticed that the above description fits neatly into an exisiting class of ML models called [Autoencoders](https://en.wikipedia.org/wiki/Autoencoder). In their original incarnation these are deterministic models that use neural nets (NNs) to map the original data $x$ to some lower dimensional representation in terms of some latent variables $h$ (this part is called the **encoder**), and then map $h$ to an output $x'$ of the same format as the original data (**decoder**). 
 
-<a title="Michela Massi, CC BY-SA 4.0 &lt;https://creativecommons.org/licenses/by-sa/4.0&gt;, via Wikimedia Commons" href="https://commons.wikimedia.org/wiki/File:Autoencoder_schema.png"><img width="400" alt="Autoencoder schema" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/Autoencoder_schema.png/512px-Autoencoder_schema.png"></a>
+<figure>
+<img width="400" alt="Autoencoder schema" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/Autoencoder_schema.png/512px-Autoencoder_schema.png">
+<figcaption> Source: 
+<a title="Michela Massi, CC BY-SA 4.0 &lt;https://creativecommons.org/licenses/by-sa/4.0&gt;, via Wikimedia Commons" href="https://commons.wikimedia.org/wiki/File:Autoencoder_schema.png">Wikipedia</a>
+</figcaption>
+</figure>
 
 An autoencoder is trained to return outputs close to the inputs. Because of the lower dimensional hidden layer, it cannot do this in a trivial way by learning the identity mapping in the data space. Instead, the idea is that if the data lives close to some lower dimensional manifold embedded in the high dimensional data space – an idea called the **manifold hypothesis** – the trained autoencoder can map this data manifold to the hidden layer. 
 
@@ -157,7 +162,7 @@ the same as the prior! This is known as **posterior collapse**. You may have a g
 
 #### Compression with VAEs: bits back
 
-In Lecture 1 we discussed the entropy as a fundamental bound on the compression of data, and I suggested that good probabilistic models tailored to a particular kind of data would give better compression. How can we deliver on this promise for latent variable models like the VAE? The problem, as always, is that the model doesn't supply an explicit expression for $p_\text{M}(x)$: marginalizing over the latent variables is intractable. 
+In [Lecture 1](../ml-stat-mech-1) we discussed the entropy as a fundamental bound on the compression of data, and I suggested that good probabilistic models tailored to a particular kind of data would give better compression. How can we deliver on this promise for latent variable models like the VAE? The problem, as always, is that the model doesn't supply an explicit expression for $p_\text{M}(x)$: marginalizing over the latent variables is intractable. 
 
 There is a beautiful idea called **bits back coding** that is particularly well suited to the encoder-decoder formulation of latent variable models, and allows the unavailability of $p_\text{M}(x)$ to be circumvented. Recall that the loss function of the VAE is based on the inequality
 
@@ -323,9 +328,12 @@ $$
 
 Apart from a normalization factor that depends on $\br_\pm$ and $T$, this is just the expected ground state distribution $|\varphi_0(\br)|^2$. Thus, the ability to sample from the FK measure for long trajectories would also allow us to sample from the ground state distribution. One technique for doing this is [Path integral Monte Carlo](https://journals.aps.org/rmp/abstract/10.1103/RevModPhys.67.279), which performs Monte Carlo sampling the space of Feynman trajectories.
 
-<p align="center">
-<img src="assets/ceperley.png" width="50%">
-</p>
+<figure>
+<img src="assets/ceperley.png">
+<figcaption>
+An image from Ceperley
+</figcaption>
+</figure>
 
 #### The loss function
 

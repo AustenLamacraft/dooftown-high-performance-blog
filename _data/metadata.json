@@ -2,7 +2,7 @@
   "title": "Austen Lamacraft",
   "url": "https://austen.uk",
   "domain": "austen.uk",
-  "description": "Description of the website. Update me.",
+  "description": "Austen Lamacraft's academic website",
   "genre": "Insert a schema.org genre",
   "googleAnalyticsId": "GA ID. Update me. Note, that this is not compatible with the not-yet-commonly used version 4 of Google Analytics",
   "sendWebVitals": false,
@@ -18,7 +18,7 @@
   },
   "author": {
     "name": "Austen Lamacraft",
-    "twitterHandle": "update_me"
+    "twitterHandle": "AustenLamacraft"
   },
   "publisher": {
     "name": "Publisher name. Update me."

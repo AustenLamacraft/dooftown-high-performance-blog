@@ -7,4 +7,17 @@ eleventyNavigation:
   order: 7
 ---
 
-Papers go here
+<dl>
+{% for pub in arxiv %}
+  <dt>
+    <a href="{{ pub.id | url }}">{% if pub.title %}{{ pub.title }}{% else %}<code>{{ pub.link }}</code>{% endif %}</a>
+    {% for author in pub.author %}
+      {{ author.name }}
+    {% endfor %}
+    <time  datetime="{{ pub.published | htmlDateString }}">{{ pub.published | readableDate }}</time>
+  </dt>
+  <dd>
+    {{ pub.summary[0] | truncate }}
+  </dd>
+{% endfor %}
+</dl>

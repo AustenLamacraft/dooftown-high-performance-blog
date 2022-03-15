@@ -194,6 +194,16 @@ module.exports = function (eleventyConfig) {
     );
   });
 
+  eleventyConfig.addCollection("activities", (collection) => {
+    return (
+      collection
+        .getAll()
+        .filter(item => {
+          return item.data.tags?.some(tag => ['posts', 'talks', 'publications', 'teaching'].includes(tag))
+        })
+    )
+  })
+
   eleventyConfig.addCollection("tagList", require("./_11ty/getTagList"));
   eleventyConfig.addPassthroughCopy("img");
   eleventyConfig.addPassthroughCopy("css");
@@ -234,7 +244,7 @@ module.exports = function (eleventyConfig) {
   }));
   eleventyConfig.setLibrary("md", markdownLibrary);
 
-  // Copy assets to stay with 
+  // Copy assets to stay with their page`
   // See https://github.com/11ty/eleventy/issues/379#issuecomment-779705668
   eleventyConfig.addTransform("local-images", function(content, outputPath) {
     // HUGO logic:
@@ -251,7 +261,7 @@ module.exports = function (eleventyConfig) {
     if (!template.inputPath.startsWith('./content')) { 
       return content;
     }
-    console.warn(`TRANSFORM - input: ${template.inputPath}, output: ${outputPath}`);
+    // console.warn(`TRANSFORM - input: ${template.inputPath}, output: ${outputPath}`);
 
 
     const outputDir = path.dirname(outputPath);       
@@ -275,7 +285,6 @@ module.exports = function (eleventyConfig) {
     const fileIgnorePattern = path.join(templateDir, `**/*.{${extensionsRegex}}`);
 
     const filesToCopy = glob.sync(fileSearchPattern, { nodir: true, ignore: fileIgnorePattern });
-    console.log(filesToCopy)
     for (let filePath of filesToCopy) {
         // strip template dir
         // prepend output dir
@@ -285,7 +294,7 @@ module.exports = function (eleventyConfig) {
         );
 
         const destDir = path.dirname(destPath);
-        console.log(outputDir, filePath, destDir, templateDir)  
+         
         fs.mkdirSync(destDir, { recursive: true });
         fs.copyFileSync(filePath, destPath);
     }

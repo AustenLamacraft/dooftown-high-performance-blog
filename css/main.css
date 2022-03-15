@@ -667,7 +667,7 @@ hr {
   border-bottom: 1px solid #eee;
 }
 figcaption {
-  color: #ccc;
+  color: rgb(22, 21, 21);
   margin-top: 0.75em;
   font-size: 80%;
 }
