@@ -193,14 +193,17 @@ module.exports = function (eleventyConfig) {
         })
     );
   });
+  
 
-  eleventyConfig.addCollection("activities", (collection) => {
+  eleventyConfig.addCollection("recent", (collection) => {
     return (
       collection
-        .getAll()
+        .getAll().concat(collection.getAll()[0].data.arxiv) // Add in publications
         .filter(item => {
-          return item.data.tags?.some(tag => ['posts', 'talks', 'publications', 'teaching'].includes(tag))
+          return item.data.tags?.some(tag => ['posts', 'talks', 'arxiv', 'teaching'].includes(tag))
         })
+        .sort((a,b) => a.date - b.date)
+        .slice(-10)
     )
   })
 

@@ -6,15 +6,15 @@
 - [ ] Add doi / cite at bottom of posts
 - [ ] Add table of contents
 - [ ] HTML (rather than SVG) for MathJax
-- [ ] Publication list
+- [X] Publication list
 - [ ] Have massacred the CSP policy in order to get reveal working
 
 # Features
 
 - Math with MathJax using `markdown-it-mathjax3`
 - Reveal.js slideshow 
-- Assets live locally with each templates (as in Hugo)
-- 
+- Assets live locally with each template (as in Hugo)
+- Publication list pulled from arXiv using [eleventy-fetch](https://www.11ty.dev/docs/plugins/fetch/)
 
 # eleventy-high-performance-blog
 

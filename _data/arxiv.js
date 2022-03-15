@@ -11,11 +11,20 @@ module.exports = async function() {
         type: "text"    
       }).then(xml => parseStringPromise(xml))
       .then(json => {
-          const entry = json.feed.entry
-          return entry.map(element => {
-            element.author = element.author.map(a => a.name)
-            element.published = new Date(element.published)
-            return element 
-          });
+          const entries = json.feed.entry
+          const data = ({id, published, author, title, summary, ...rest}) => ({
+              ...rest, 
+              author: author.map(a => a.name),
+              title: title[0],
+              summary: summary[0],
+              tags: ["arxiv"]
+            })
+          return entries
+            .map(entry => ({
+                data: data(entry),
+                url: entry.id[0],
+                date: new Date(entry.published)
+            }))
+            .sort((a,b) => a.date - b.date)
       });
 }
