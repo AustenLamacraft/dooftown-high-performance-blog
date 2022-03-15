@@ -10,11 +10,8 @@ eleventyNavigation:
 <dl>
 {% for pub in arxiv %}
   <dt>
-    <a href="{{ pub.id | url }}">{% if pub.title %}{{ pub.title }}{% else %}<code>{{ pub.link }}</code>{% endif %}</a>
-    {% for author in pub.author %}
-      {{ author.name }}
-    {% endfor %}
-    <time  datetime="{{ pub.published | htmlDateString }}">{{ pub.published | readableDate }}</time>
+  <h4><a href="{{ pub.id | url }}">{% if pub.title %}{{ pub.title }}{% else %}<code>{{ pub.link }}</code>{% endif %}</a></h4>
+  <h5> {{ pub.author | join(', ') }} (<time  datetime="{{ pub.published | htmlDateString }}">{{ pub.published | readableDate }}</time>)</h5>  
   </dt>
   <dd>
     {{ pub.summary[0] | truncate }}

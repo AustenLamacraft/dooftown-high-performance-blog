@@ -12,9 +12,10 @@ module.exports = async function() {
       }).then(xml => parseStringPromise(xml))
       .then(json => {
           const entry = json.feed.entry
-          entry.forEach(element => {
-            element.published = new Date(element.published) 
+          return entry.map(element => {
+            element.author = element.author.map(a => a.name)
+            element.published = new Date(element.published)
+            return element 
           });
-          return entry
       });
 }
