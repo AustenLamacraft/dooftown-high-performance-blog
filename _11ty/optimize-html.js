@@ -92,7 +92,7 @@ const minifyHtml = (rawContent, outputPath) => {
     content = minify(content, {
       removeAttributeQuotes: true,
       collapseBooleanAttributes: true,
-      collapseWhitespace: true,
+      collapseWhitespace: false, // Removing whitespace messes with inline LaTeX math
       removeComments: true,
       sortClassName: true,
       sortAttributes: true,

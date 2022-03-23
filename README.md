@@ -5,7 +5,10 @@
 - [ ] Pass options from front matter to reveal
 - [ ] Add doi / cite at bottom of posts
 - [ ] Add table of contents
-- [ ] HTML (rather than SVG) for MathJax
+- [X] HTML (rather than SVG) for MathJax
+- [ ] Add physics package and equation numbering to MathJax
+- [ ] Fix macros for MathJax
+- [ ] Add option to turn on math rendering 
 - [X] Publication list
 - [ ] Have massacred the CSP policy in order to get reveal working
 

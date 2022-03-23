@@ -58,6 +58,15 @@ const markdownIt = require("markdown-it");
 const markdownItAnchor = require("markdown-it-anchor");
 const localImages = require("./third_party/eleventy-plugin-local-images/.eleventy.js");
 
+const markdownItMathjax3 = require('./third_party/markdown-it-mathjax3/index.js')
+
+const {mathjax} = require('mathjax-full/js/mathjax.js');
+const {TeX} = require('mathjax-full/js/input/tex.js');
+const {CHTML} = require('mathjax-full/js/output/chtml.js');
+const {liteAdaptor} = require('mathjax-full/js/adaptors/liteAdaptor.js');
+const {RegisterHTMLHandler} = require('mathjax-full/js/handlers/html.js');
+const {AssistiveMmlHandler} = require('mathjax-full/js/a11y/assistive-mml.js');
+
 
 const CleanCSS = require("clean-css");
 const GA_ID = require("./_data/metadata.json").googleAnalyticsId;
@@ -180,6 +189,9 @@ module.exports = function (eleventyConfig) {
     return collectionApi.getFilteredByTag("posts");
   });
 
+  // Pass through revealjs
+  // See https://github.com/11ty/eleventy/issues/768#issue-522432961
+  eleventyConfig.addPassthroughCopy({ 'node_modules/reveal.js': 'js/reveal.js' });
   // Slides need raw markdown to be processed by reveal
   // https://github.com/11ty/eleventy/issues/1206#issuecomment-718226128
   eleventyConfig.addCollection('talks', (collection) => {
@@ -214,10 +226,6 @@ module.exports = function (eleventyConfig) {
   eleventyConfig.addPassthroughCopy(GA_ID ? "js" : "js/*[!cached].*");
   eleventyConfig.addPassthroughCopy("fonts");
 
-  // Pass through revealjs
-  // See https://github.com/11ty/eleventy/issues/768#issue-522432961
-  eleventyConfig.addPassthroughCopy({ 'node_modules/reveal.js': 'js/reveal.js' });
-
   // We need to rebuild upon JS change to update the CSP.
   eleventyConfig.addWatchTarget("./js/");
   // We need to rebuild on CSS change to inline it.
@@ -238,14 +246,58 @@ module.exports = function (eleventyConfig) {
   });
   
   // Add MathJax
-  markdownLibrary.use(require('markdown-it-mathjax3', {
-    loader: {load: ['[tex]/physics', '[tex]/ams']},
-    tex: {
-      packages: {'[+]': ['physics', 'ams']},
-      tags: 'all'
-    },
-  }));
-  eleventyConfig.setLibrary("md", markdownLibrary);
+  // markdownLibrary.use(markdownItMathjax3, {
+  //   loader: {load: ['[tex]/physics', '[tex]/ams', 'output/chtml']},
+  //   tex: {
+  //     packages: {'[+]': ['physics', 'ams']},
+  //     tags: 'all'
+  //   },
+  // });
+  // eleventyConfig.setLibrary("md", markdownLibrary);
+
+  // Process any math on page with MathJax
+  // First pass through fonts
+  eleventyConfig.addPassthroughCopy({ 'node_modules/mathjax-full/es5/output/chtml/fonts/woff-v2': 'fonts/woff-v2' });
+  // Then transform each page
+  eleventyConfig.addTransform('mathjax', function(content, outputPath) {
+    
+    const template = this;
+
+    // Only render posts
+    if (!template.inputPath.startsWith('./content/posts/')) { 
+      return content;
+    }
+    
+    console.log(`Adding MathJax to ${template.inputPath}`)
+
+    //
+    //  Create DOM adaptor and register it for HTML documents
+    //
+    const adaptor = liteAdaptor();
+    AssistiveMmlHandler(RegisterHTMLHandler(adaptor));
+
+    //
+    //  Create input and output jax and a document using them on the content from the HTML file
+    //
+    const tex = new TeX({packages: {'[+]': ['physics', 'ams']}, inlineMath: [['$','$']]});
+    const chtml = new CHTML({fontURL: '../../../fonts/woff-v2'});
+    const html = mathjax.document(content, {InputJax: tex, OutputJax: chtml});
+
+    //
+    //  Typeset the document
+    //
+    html.render();
+
+    //
+    //  If no math was found on the page, remove the stylesheet
+    //
+    if (Array.from(html.math).length === 0) adaptor.remove(html.outputJax.chtmlStyles);
+
+    //
+    //  Output the resulting HTML
+
+    return adaptor.outerHTML(adaptor.root(html.document)).trim()
+  })
 
   // Copy assets to stay with their page`
   // See https://github.com/11ty/eleventy/issues/379#issuecomment-779705668
