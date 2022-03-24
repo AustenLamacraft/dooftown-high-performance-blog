@@ -12,9 +12,13 @@
 - [X] Publication list
 - [ ] Have massacred the CSP policy in order to get reveal working
 
+# Oddities
+
+- When you set `tags: 'all'` in the MathJax config you can't use `\eqref`, only `\ref`.
+
 # Features
 
-- Math with MathJax using `markdown-it-mathjax3`
+- Math with MathJax 
 - Reveal.js slideshow 
 - Assets live locally with each template (as in Hugo)
 - Publication list pulled from arXiv using [eleventy-fetch](https://www.11ty.dev/docs/plugins/fetch/)

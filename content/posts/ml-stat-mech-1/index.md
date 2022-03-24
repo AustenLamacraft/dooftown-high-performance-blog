@@ -103,7 +103,9 @@ Planted ensembles
 Probabilities are real positive numbers $p(x)\geq 0$ satisfying 
 
 $$
+\begin{equation}
 \sum_x p(x)=1
+\end{equation}
 $$
 
 For continuous variables we have an integral of a probability density function
@@ -122,11 +124,10 @@ $$
 
 A related notion is the **conditional probability** $p(x|y)$: the probability distribution of $x$ given a fixed value of random variable $y$. The relation between joint and conditional probabilities is 
 
-$$
+\begin{equation}
 p(x,y)=p(x|y)p(y)
-\tag{1}
 \label{eq:joint}
-$$
+\end{equation}
 
 
 We *should* write $p_X(x)$ for the distribution of random variable $X$ and $p_Y(y)$ for random variable $Y$. Instead, we just let the name of the argument tell us it's a different distribution. Everyone does this.
@@ -134,15 +135,16 @@ We *should* write $p_X(x)$ for the distribution of random variable $X$ and $p_Y(
 
 For a joint probability of many variables, we have
 
-$$
+
+\begin{equation}
 p(x_1,\ldots x_N)=p(x_1)p(x_2|x_1)p(x_3|x_2,x_1)\cdots p(x_N|x_1,\ldots x_{N-1}),
-\tag{2}
 \label{eq:chain}
-$$
+\end{equation}
+
 
 which is sometimes called the [chain rule of probability](https://en.wikipedia.org/wiki/Chain_rule_(probability)). Although it's always possible *in principle* to express a joint probability like this, there's no guarantee it's easy to do or useful. One situation in which one may expect it to be a convenient description is when there is a natural order to the variables. For example, words or characters in text or any kind of time series. In this case the model may still be useful if the conditional probabilities involve only a fixed number $p$ of the preceding variables, even as $N\to\infty$. Such models are called [autoregressive](https://en.wikipedia.org/wiki/Autoregressive_model), although a physicist may be tempted to call them *causal*.
 
-Sampling from a highly complex joint distribution $p(x_1,\ldots x_N)$ is generally difficult. One of the benefits of formulating a model as in $\eqref{eq:chain}$ is that producing samples is much easier. First you sample $x_1$ using $p(\cdot)$, then sample $x_2$ using $p(\cdot|x_1)$, and so on. You never have to sample more than one variable at once!
+Sampling from a highly complex joint distribution $p(x_1,\ldots x_N)$ is generally difficult. One of the benefits of formulating a model as in \eqref{eq:chain} is that producing samples is much easier. First you sample $x_1$ using $p(\cdot)$, then sample $x_2$ using $p(\cdot|x_1)$, and so on. You never have to sample more than one variable at once!
 
 #### Priors and posteriors
 
@@ -231,13 +233,12 @@ To see what $\sim$ means in this context note that when $p(x)=1/|X|$ (uniform di
  The entropy is therefore a useful measure of **exponentially unlikely events**. If we divide a container of $N$ ideal gas molecules up into $|X|$ identical regions $x=1\,\ldots |X|$, the probability of finding a fraction of gas $p(x)$ in each region is $\propto 2^{NH[p]}$.  -->
 Suppose we have $N$ iid variables with distribution $p(x)$. The probability of observing a sequence $x_1,\ldots x_N$ is
 
-$$
+
 \begin{equation}
 p(x_1,\ldots x_N)=\prod_{n=1}^N p(x_n).
-\end{equation}
-\tag{3}
 \label{eq:seq}
-$$
+\end{equation}
+
 
 This probability is obviously exponentially small as $N\to\infty$, but how small? The answer is 
 
@@ -389,21 +390,21 @@ In this section we'll see that it's possible to develop a variational formulatio
 
 For an SM model like the Ising model the probability has the form
 
-$$
+
+\begin{equation}
 p(\sigma) = \frac{\exp\left[-\beta\cE(\sigma)\right]}{Z}.
-\tag{4}
 \label{eq:boltzmann}
-$$
+\end{equation}
+
 
 The goal is to find expectations, for example the average energy $\E\_{\sigma\sim p}\left[\cE(\sigma)\right]$. Since this is difficult for the $p(\sigma)$ nature gives us we are going to try and approximate $p(\sigma)$ by a *simpler* class of distributions $q\_\phi(\sigma)$, where $\phi$ denote the parameters that define the family, and find the *best* approximation.
 
 What does *simpler* mean? It means one where we can actually calculate expectations (with the resources we have available). Probably the most drastic simplification we can take is to suppose that the variables are independent, so that the probability distribution factorizes
 
-$$
+\begin{equation}
 q_\phi(\sigma)=\prod_n q_{\phi_n}(\sigma_n).
-\tag{5}
 \label{eq:factor}
-$$
+\end{equation}
 
 We are allowing for the single spin distributions to be different, which will be appropriate for an inhomogeneous model, the kind of thing you would use to describe a disordered spin system.
 
@@ -421,11 +422,10 @@ $$
 
 or in usual SM language
 
-$$
+\begin{equation}
 \E_{\sigma\sim q_\phi}\left[\cE(\sigma)\right]-TH[q_\phi] \geq F,
-\tag{6}
 \label{eq:mft}
-$$
+\end{equation}
 
 where $F=-T\log Z$ is the Helmholtz free energy. This is known as variously as the [Bogoliubov](https://en.wikipedia.org/wiki/Helmholtz_free_energy#Bogoliubov_inequality) or [Gibbs](https://en.wikipedia.org/wiki/Gibbs%27_inequality) inequality. By optimizing the left hand side over $\phi$ we can find the best approximation within our family, and it will achieve a free energy closest to the true value.
 
@@ -453,11 +453,10 @@ $$
 
 (we add the subscript "M" for model) The role of the spins $\sigma$ is now played by the latent variables. Following exactly the same steps leads us to 
 
-$$
+\begin{equation}
 \log p_\text{M}(x) \geq \E_{z\sim q_\phi(\cdot|x)}\left[\log p(x,z)\right]+ H[q_\phi(\cdot|z)].
-\tag{7}
 \label{eq:elbo}
-$$
+\end{equation}
 
 The right hand side is called the [Evidence lower bound](https://en.wikipedia.org/wiki/Evidence_lower_bound) or **ELBO** (because the marginalized probability $p(x)$ on the left is sometimes called the **model evidence**). 
 

@@ -58,14 +58,16 @@ const markdownIt = require("markdown-it");
 const markdownItAnchor = require("markdown-it-anchor");
 const localImages = require("./third_party/eleventy-plugin-local-images/.eleventy.js");
 
-const markdownItMathjax3 = require('./third_party/markdown-it-mathjax3/index.js')
-
 const {mathjax} = require('mathjax-full/js/mathjax.js');
 const {TeX} = require('mathjax-full/js/input/tex.js');
 const {CHTML} = require('mathjax-full/js/output/chtml.js');
 const {liteAdaptor} = require('mathjax-full/js/adaptors/liteAdaptor.js');
 const {RegisterHTMLHandler} = require('mathjax-full/js/handlers/html.js');
 const {AssistiveMmlHandler} = require('mathjax-full/js/a11y/assistive-mml.js');
+
+const {AllPackages} = require('mathjax-full/js/input/tex/AllPackages.js');
+
+require('mathjax-full/js/util/entities/all.js');
 
 
 const CleanCSS = require("clean-css");
@@ -245,16 +247,6 @@ module.exports = function (eleventyConfig) {
     permalinkSymbol: "#",
   });
   
-  // Add MathJax
-  // markdownLibrary.use(markdownItMathjax3, {
-  //   loader: {load: ['[tex]/physics', '[tex]/ams', 'output/chtml']},
-  //   tex: {
-  //     packages: {'[+]': ['physics', 'ams']},
-  //     tags: 'all'
-  //   },
-  // });
-  // eleventyConfig.setLibrary("md", markdownLibrary);
-
   // Process any math on page with MathJax
   // First pass through fonts
   eleventyConfig.addPassthroughCopy({ 'node_modules/mathjax-full/es5/output/chtml/fonts/woff-v2': 'fonts/woff-v2' });
@@ -269,25 +261,26 @@ module.exports = function (eleventyConfig) {
     }
     
     console.log(`Adding MathJax to ${template.inputPath}`)
-
     //
     //  Create DOM adaptor and register it for HTML documents
     //
     const adaptor = liteAdaptor();
     AssistiveMmlHandler(RegisterHTMLHandler(adaptor));
-
     //
     //  Create input and output jax and a document using them on the content from the HTML file
     //
-    const tex = new TeX({packages: {'[+]': ['physics', 'ams']}, inlineMath: [['$','$']]});
+    const tex = new TeX({
+      packages: {'[+]': ['physics', 'ams', 'newcommand']}, 
+      inlineMath: [['$','$']],
+      tags: 'ams'
+    });
+    
     const chtml = new CHTML({fontURL: '../../../fonts/woff-v2'});
     const html = mathjax.document(content, {InputJax: tex, OutputJax: chtml});
-
     //
     //  Typeset the document
     //
     html.render();
-
     //
     //  If no math was found on the page, remove the stylesheet
     //
@@ -295,7 +288,7 @@ module.exports = function (eleventyConfig) {
 
     //
     //  Output the resulting HTML
-
+    //
     return adaptor.outerHTML(adaptor.root(html.document)).trim()
   })
 
